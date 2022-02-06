@@ -1,5 +1,9 @@
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program::system_program;
+use anchor_lang::solana_program::system_instruction;
+use anchor_lang::solana_program::program::invoke;
+use anchor_lang::solana_program::pubkey::Pubkey;
+use std::str::FromStr;
 
 declare_id!("KdWVDYMteVwTbBNZGfCkS2ayCFEWhbkBoFZxPwdqCgu");
 
@@ -16,6 +20,25 @@ pub mod register {
         microtitle.bkey = bkey;
         microtitle.mint = mint; 
 
+        // pay the fee:
+        let fee: u64 = 25_000_000;
+
+        let ix = system_instruction::transfer(
+            ctx.accounts.author.key,
+            ctx.accounts.registrar.key,
+            fee
+        );
+        
+        invoke(
+            &ix,
+            &[
+                ctx.accounts.author.to_account_info(),
+                ctx.accounts.registrar.to_account_info(),
+                ctx.accounts.system_program.to_account_info(),
+            ],
+        )?;
+
+
         Ok(())
     }
 }
@@ -26,6 +49,8 @@ pub struct UpdateRegister<'info> {
     pub microtitle: Account<'info, Microtitle>,
     #[account(mut)]
     pub author: Signer<'info>,
+    #[account(mut, address = Pubkey::from_str("HSMaqKWmpKtibZrukaE4X3HatNDUYkzg39y2kri3PRTh").unwrap())]
+    pub registrar: AccountInfo<'info>,
     #[account(address = system_program::ID)]
     pub system_program: AccountInfo<'info>,
 }
