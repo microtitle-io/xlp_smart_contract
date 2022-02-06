@@ -18,12 +18,14 @@ describe('register', () => {
     const utitle = anchor.web3.Keypair.generate();
     const bkey = new PublicKey('79SeGDwWgDmM2PdBHbpxnpKKLwEZmN6iZcNrNUQqkUfE')
     const mintId = new PublicKey('GQLWnE4WvVwwmvZPiC1EbkByKVXWGV3undLM52bqBLhK')
+    const registrarPubkey = new PublicKey('HSMaqKWmpKtibZrukaE4X3HatNDUYkzg39y2kri3PRTh');
    // const awallet = program.provider.wallet;
 
     await program.rpc.updateRegister(bkey, mintId, {
         accounts: {
             microtitle: utitle.publicKey,
             author: program.provider.wallet.publicKey,
+            registrar: registrarPubkey,
             systemProgram: anchor.web3.SystemProgram.programId,
         },
         signers: [utitle], // --> how to get the type Keypair from the type Wallet? You need the author to serve as the signer, payer.
