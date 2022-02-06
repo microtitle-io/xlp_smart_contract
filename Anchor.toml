@@ -1,0 +1,12 @@
+[programs.devnet]
+register = "KdWVDYMteVwTbBNZGfCkS2ayCFEWhbkBoFZxPwdqCgu"
+
+[registry]
+url = "https://anchor.projectserum.com"
+
+[provider]
+cluster = "devnet"
+wallet = "/home/cylon/.config/solana/id.json"
+
+[scripts]
+test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"
